@@ -12,27 +12,26 @@ RESET = '\033[0m'
 def banner():
     os.system("clear")
     print(f"""{B}
-╔═══════════════════════════════════════╗
-║          {R}DERIUM HackSuite{B} - v1.0         ║
-╠═══════════════════════════════════════╣
-║   {W}Author : Derium-hub                   {B}║
-║   {W}Status : Online                       {B}║
-║   {W}Tools  : Scanner | Lookup | Ping      {B}║
-╚═══════════════════════════════════════╝{RESET}
+╔════════════════════════════════════════════╗
+║         {R}DERIUM HackSuite{B}  -  v1.0             ║
+╠════════════════════════════════════════════╣
+║  Author  : Derium-hub                      ║
+║  Status  : Online                          ║
+║  Tools   : Scanner | Lookup | Ping         ║
+╚════════════════════════════════════════════╝{RESET}
 """)
 
-def menu():
-    print(f"{B}1.{W} Ping Website")
-    print(f"{B}2.{W} IP Lookup")
-    print(f"{B}3.{W} DNS Lookup")
-    print(f"{B}4.{W} Port Scanner")
-    print(f"{B}5.{W} Speedtest Internet")
-    print(f"{B}6.{W} Random User-Agent")
-    print(f"{B}7.{W} Random Quote")
-    print(f"{B}8.{W} Info Sistem")
-    print(f"{B}9.{W} 📱 Info HP Saya")
-    print(f"{B}0.{W} Keluar")
-    return input(f"\n{C}Pilih menu >> {RESET}")
+def show_menu():
+    print(f"""{C}
+[1]  Port Scanner
+[2]  DNS Lookup
+[3]  IP Geolocation
+[4]  HTTP Header Check
+[5]  Reverse IP Lookup
+[6]  Ping Website
+[7]  Device Info
+[8]  Exit Tool
+{RESET}""")
 
 def ping():
     os.system("ping -c 4 " + input("Masukkan URL/IP: "))
