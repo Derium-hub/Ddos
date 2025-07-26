@@ -1,79 +1,70 @@
-import os
-import socket
-import requests
-import platform
-import speedtest
+import os, socket, requests, platform, speedtest
 from random import choice
 
-# Warna ANSI
-R = '\033[91m'
-G = '\033[92m'
-Y = '\033[93m'
-C = '\033[96m'
-W = '\033[0m'
+# Warna
+R = '\033[91m'  # Merah
+B = '\033[94m'  # Biru
+W = '\033[97m'  # Putih
+C = '\033[96m'  # Cyan
+RESET = '\033[0m'
 
-banner = f"""{C}
-   ____           _                 
-  |  _ \ ___  ___| |_ _ __ ___  ___ 
-  | | | / _ \/ __| __| '__/ _ \/ _ \\
-  | |_| |  __/\__ \ |_| | |  __/  __/
-  |____/ \___||___/\__|_|  \___|\___|
-
-   - DeriumTools by Derium-hub -
-{W}"""
+# Banner keren
+def banner():
+    os.system("clear")
+    print(f"""{R}
+██████╗ ███████╗██████╗ ██╗██╗   ██╗███╗   ███╗
+██╔══██╗██╔════╝██╔══██╗██║██║   ██║████╗ ████║
+██████╔╝█████╗  ██████╔╝██║██║   ██║██╔████╔██║
+██╔═══╝ ██╔══╝  ██╔═══╝ ██║██║   ██║██║╚██╔╝██║
+██║     ███████╗██║     ██║╚██████╔╝██║ ╚═╝ ██║
+╚═╝     ╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝     ╚═╝
+        {B}DeriumTools by Derium-hub{RESET}
+""")
 
 def menu():
-    print(banner)
-    print(f"{Y}1.{W} Ping Website")
-    print(f"{Y}2.{W} IP Lookup")
-    print(f"{Y}3.{W} DNS Lookup")
-    print(f"{Y}4.{W} Port Scanner")
-    print(f"{Y}5.{W} Speedtest Internet")
-    print(f"{Y}6.{W} Random User-Agent")
-    print(f"{Y}7.{W} Random Quote")
-    print(f"{Y}8.{W} System Info")
-    print(f"{Y}0.{W} Keluar")
-    return input(f"{C}\nPilih menu >> {W}")
+    print(f"{B}1.{W} Ping Website")
+    print(f"{B}2.{W} IP Lookup")
+    print(f"{B}3.{W} DNS Lookup")
+    print(f"{B}4.{W} Port Scanner")
+    print(f"{B}5.{W} Speedtest Internet")
+    print(f"{B}6.{W} Random User-Agent")
+    print(f"{B}7.{W} Random Quote")
+    print(f"{B}8.{W} Info Sistem")
+    print(f"{B}9.{W} 📱 Info HP Saya")
+    print(f"{B}0.{W} Keluar")
+    return input(f"\n{C}Pilih menu >> {RESET}")
 
 def ping():
-    target = input("Masukkan URL/IP: ")
-    os.system(f"ping -c 4 {target}")
+    os.system("ping -c 4 " + input("Masukkan URL/IP: "))
 
 def ip_lookup():
-    host = input("Masukkan domain: ")
     try:
+        host = input("Masukkan domain: ")
         ip = socket.gethostbyname(host)
-        print(f"{G}IP Address: {ip}{W}")
+        print(f"{G}IP Address: {ip}{RESET}")
     except:
-        print(f"{R}Gagal mendapatkan IP.{W}")
+        print("Gagal mendapatkan IP.")
 
 def dns_lookup():
-    domain = input("Masukkan domain: ")
     try:
-        info = socket.gethostbyname_ex(domain)
-        print(f"{G}DNS Result: {info}{W}")
+        domain = input("Domain: ")
+        print(socket.gethostbyname_ex(domain))
     except:
-        print(f"{R}Gagal lookup DNS.{W}")
+        print("DNS lookup gagal.")
 
 def port_scanner():
     target = input("IP Target: ")
     ports = [21, 22, 23, 53, 80, 443, 8080]
-    print(f"{C}Scanning...{W}")
     for port in ports:
-        s = socket.socket()
-        s.settimeout(1)
-        result = s.connect_ex((target, port))
-        if result == 0:
-            print(f"{G}Port {port} terbuka{W}")
+        s = socket.socket(); s.settimeout(1)
+        if s.connect_ex((target, port)) == 0:
+            print(f"{R}Port {port} terbuka{RESET}")
         s.close()
 
 def speed_test():
-    print(f"{C}Sedang mengetes kecepatan...{W}")
     st = speedtest.Speedtest()
-    down = st.download() / 1_000_000
-    up = st.upload() / 1_000_000
-    print(f"Download: {down:.2f} Mbps")
-    print(f"Upload  : {up:.2f} Mbps")
+    print("Download:", round(st.download()/1e6, 2), "Mbps")
+    print("Upload:", round(st.upload()/1e6, 2), "Mbps")
 
 def user_agent():
     agents = [
@@ -86,34 +77,46 @@ def user_agent():
 
 def quote():
     try:
-        r = requests.get("https://api.quotable.io/random")
-        data = r.json()
+        data = requests.get("https://api.quotable.io/random").json()
         print(f'"{data["content"]}" - {data["author"]}')
     except:
         print("Gagal mengambil quote.")
 
-def sys_info():
+def info_sistem():
     print("Sistem :", platform.system())
     print("Versi  :", platform.version())
-    print("Mesin  :", platform.machine())
+    print("Platform:", platform.platform())
+    print("CPU    :", platform.machine())
 
-def main():
-    while True:
-        pilih = menu()
-        if pilih == "1": ping()
-        elif pilih == "2": ip_lookup()
-        elif pilih == "3": dns_lookup()
-        elif pilih == "4": port_scanner()
-        elif pilih == "5": speed_test()
-        elif pilih == "6": user_agent()
-        elif pilih == "7": quote()
-        elif pilih == "8": sys_info()
-        elif pilih == "0":
-            print("Keluar...")
-            break
-        else:
-            print(f"{R}Pilihan tidak valid!{W}")
-        input(f"\n{C}Tekan Enter untuk kembali ke menu...{W}")
+def info_hp():
+    print("📱 Info HP Kamu:")
+    print("- OS          :", platform.system())
+    print("- Kernel      :", platform.release())
+    print("- Arsitektur  :", platform.machine())
+    print("- Hostname    :", socket.gethostname())
+    try:
+        ip = socket.gethostbyname(socket.gethostname())
+        print("- IP Lokal    :", ip)
+    except:
+        print("- IP Lokal    : Tidak Terdeteksi")
+    if os.path.exists("/data/data/com.termux"):
+        print("- Kamu pakai Termux ✅")
 
-if __name__ == "__main__":
-    main()
+while True:
+    banner()
+    pilihan = menu()
+    if pilihan == "1": ping()
+    elif pilihan == "2": ip_lookup()
+    elif pilihan == "3": dns_lookup()
+    elif pilihan == "4": port_scanner()
+    elif pilihan == "5": speed_test()
+    elif pilihan == "6": user_agent()
+    elif pilihan == "7": quote()
+    elif pilihan == "8": info_sistem()
+    elif pilihan == "9": info_hp()
+    elif pilihan == "0":
+        print(f"{R}Keluar...{RESET}")
+        break
+    else:
+        print(f"{R}Menu tidak valid!{RESET}")
+    input(f"\n{B}Tekan Enter untuk kembali ke menu...{RESET}")
