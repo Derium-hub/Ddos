@@ -1,84 +1,141 @@
 import os
 import time
+import platform
+import urllib.request
+from datetime import datetime
+import subprocess
 
-# Warna ANSI
 R = '\033[91m'  # Merah
-G = '\033[92m'  # Hijau
-Y = '\033[93m'  # Kuning
 B = '\033[94m'  # Biru
-C = '\033[96m'  # Cyan
-W = '\033[97m'  # Putih
 RESET = '\033[0m'
 
 def banner():
     print(f"""{R}
-██████╗ ███████╗██████╗ ██╗██╗   ██╗███╗   ███╗    {B}████████╗ ██████╗  ██████╗ ██╗     ███████╗██╗███████╗
-██╔══██╗██╔════╝██╔══██╗██║██║   ██║████╗ ████║    {B}╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝██║██╔════╝
-██████╔╝█████╗  ██████╔╝██║██║   ██║██╔████╔██║       ██║   ██║   ██║██║   ██║██║     █████╗  ██║█████╗  
-██╔═══╝ ██╔══╝  ██╔═══╝ ██║██║   ██║██║╚██╔╝██║       ██║   ██║   ██║██║   ██║██║     ██╔══╝  ██║██╔══╝  
-██║     ███████╗██║     ██║╚██████╔╝██║ ╚═╝ ██║       ██║   ╚██████╔╝╚██████╔╝███████╗███████╗██║███████╗
-╚═╝     ╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝     ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚═╝╚══════╝{RESET}
-""")
+██████╗ ███████╗██████╗ ██╗██╗   ██╗███╗   ███╗    {B}████████╗ ██████╗  ██████╗ ██╗     ██╗███████╗
+██╔══██╗██╔════╝██╔══██╗██║██║   ██║████╗ ████║    {R}╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██║██╔════╝
+██████╔╝█████╗  ██████╔╝██║██║   ██║██╔████╔██║       ██║   ██║   ██║██║   ██║██║     ██║███████╗
+██╔═══╝ ██╔══╝  ██╔═══╝ ██║██║   ██║██║╚██╔╝██║       ██║   ██║   ██║██║   ██║██║     ██║╚════██║
+██║     ███████╗██║     ██║╚██████╔╝██║ ╚═╝ ██║       ██║   ╚██████╔╝╚██████╔╝███████╗██║███████║
+╚═╝     ╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝     ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚══════╝
+{RESET}""")
 
-def menu():
-    print(f"""{C}
-[1] Port Scanner
-[2] DNS Lookup
-[3] IP Geolocation
-[4] Reverse IP
-[5] Admin Finder
-[6] Ping Website
-[7] Device Info
-[8] Exit{RESET}
-""")
-
-def dummy_action(name):
-    print(f"{C}\n[+] Menjalankan {name}...\n{RESET}")
-    time.sleep(1)
-
-def device_info():
+# Fungsi berguna
+def cek_internet():
     try:
-        model = os.popen("getprop ro.product.model").read().strip()
-        android_version = os.popen("getprop ro.build.version.release").read().strip()
-        ram = os.popen("free -h | grep Mem | awk '{print $2}'").read().strip()
-        rom = os.popen("df -h /data | tail -1 | awk '{print $2}'").read().strip()
+        urllib.request.urlopen("http://google.com", timeout=3)
+        print(f"{B}[✓] Internet Aktif{RESET}")
+    except:
+        print(f"{R}[!] Tidak Ada Koneksi Internet{RESET}")
 
-        print(f"{Y}\n[•] Nama Produk     : {model}")
-        print(f"[•] Versi Android   : {android_version}")
-        print(f"[•] RAM Tersedia    : {ram}")
-        print(f"[•] ROM Tersedia    : {rom}{RESET}")
-    except Exception as e:
-        print(f"{R}[!] Gagal mendapatkan info perangkat: {e}{RESET}")
-    input(f"{B}\nTekan Enter untuk kembali ke menu...{RESET}")
+def baterai():
+    os.system("termux-battery-status")
 
-def main():
+def penyimpanan():
+    os.system("df -h")
+
+def info():
+    os.system("termux-info")
+
+def ip_pub():
+    os.system("curl ifconfig.me")
+
+def ping():
+    os.system("ping -c 4 google.com")
+
+def waktu():
+    now = datetime.now()
+    print(f"{B}Tanggal:{RESET} {now.strftime('%d-%m-%Y')}")
+    print(f"{B}Waktu  :{RESET} {now.strftime('%H:%M:%S')}")
+
+def kalkulator():
+    try:
+        expr = input(f"{B}Operasi (cth 5+6*2): {RESET}")
+        hasil = eval(expr)
+        print(f"{R}Hasil: {hasil}{RESET}")
+    except:
+        print(f"{R}Input tidak valid!{RESET}")
+
+def speedtest():
+    os.system("curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python")
+
+def scan_jaringan():
+    os.system("nmap -sn 192.168.1.0/24")
+
+def info_kernel():
+    os.system("uname -a")
+
+def daftar_aplikasi():
+    os.system("pm list packages")
+
+def clipboard():
+    os.system("termux-clipboard-get")
+
+def cpu_monitor():
+    os.system("top -n 1")
+
+def uptime():
+    os.system("uptime")
+
+def flashlight_on():
+    os.system("termux-torch on")
+
+def flashlight_off():
+    os.system("termux-torch off")
+
+def lokasi():
+    os.system("termux-location")
+
+def sensor():
+    os.system("termux-sensor -n accelerometer,gyroscope")
+
+def qr_generator():
+    teks = input(f"{B}Masukkan teks QR: {RESET}")
+    os.system(f"qrencode -t ANSIUTF8 '{teks}'")
+
+# Menu
+def menu():
     while True:
-        os.system("clear")
-        banner()
-        menu()
-        pilihan = input(f"{G}Pilih menu > {RESET}")
-        if pilihan == '1':
-            dummy_action("Port Scanner")
-        elif pilihan == '2':
-            dummy_action("DNS Lookup")
-        elif pilihan == '3':
-            dummy_action("IP Geolocation")
-        elif pilihan == '4':
-            dummy_action("Reverse IP")
-        elif pilihan == '5':
-            dummy_action("Admin Finder")
-        elif pilihan == '6':
-            target = input("Masukkan URL/domain: ")
-            os.system(f"ping -c 4 {target}")
-            input(f"{B}Tekan Enter untuk kembali ke menu...{RESET}")
-        elif pilihan == '7':
-            device_info()
-        elif pilihan == '8':
-            print(f"{Y}Terima kasih telah menggunakan DERIUM TOOLS!{RESET}")
+        print(f"""{B}
+[1] Cek Internet     [2] Status Baterai    [3] Cek Penyimpanan
+[4] Info Perangkat   [5] Cek IP Publik     [6] Ping Google
+[7] Tanggal & Waktu  [8] Kalkulator        [9] Speedtest
+[10] Scan Jaringan   [11] Info Kernel      [12] Daftar Aplikasi
+[13] Clipboard Isi   [14] Monitor CPU      [15] Waktu Aktif
+[16] Flashlight ON   [17] Flashlight OFF   [18] Lokasi Sekarang
+[19] Sensor Deteksi  [20] QR Code Generator
+[0] Keluar
+{RESET}""")
+        pilihan = input(f"{R}Pilih menu: {RESET}")
+        if pilihan == "1": cek_internet()
+        elif pilihan == "2": baterai()
+        elif pilihan == "3": penyimpanan()
+        elif pilihan == "4": info()
+        elif pilihan == "5": ip_pub()
+        elif pilihan == "6": ping()
+        elif pilihan == "7": waktu()
+        elif pilihan == "8": kalkulator()
+        elif pilihan == "9": speedtest()
+        elif pilihan == "10": scan_jaringan()
+        elif pilihan == "11": info_kernel()
+        elif pilihan == "12": daftar_aplikasi()
+        elif pilihan == "13": clipboard()
+        elif pilihan == "14": cpu_monitor()
+        elif pilihan == "15": uptime()
+        elif pilihan == "16": flashlight_on()
+        elif pilihan == "17": flashlight_off()
+        elif pilihan == "18": lokasi()
+        elif pilihan == "19": sensor()
+        elif pilihan == "20": qr_generator()
+        elif pilihan == "0":
+            print(f"{R}Keluar...{RESET}")
             break
         else:
-            print(f"{R}Pilihan tidak valid.{RESET}")
-            time.sleep(1)
+            print(f"{R}Pilihan tidak valid!{RESET}")
+        input(f"{B}Tekan Enter untuk kembali...{RESET}")
+        os.system("clear")
+        banner()
 
 if __name__ == "__main__":
-    main()
+    os.system("clear")
+    banner()
+    menu()
