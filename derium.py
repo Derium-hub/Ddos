@@ -1,14 +1,13 @@
-import os, socket, requests, platform, speedtest
-from random import choice
+import os
+import time
 
-# Warna
-R = '\033[91m'  # Merah
-B = '\033[94m'  # Biru
-W = '\033[97m'  # Putih
-C = '\033[96m'  # Cyan
-RESET = '\033[0m'
+# Warna ANSI
+R = "\033[91m"   # Merah
+B = "\033[94m"   # Biru
+C = "\033[96m"   # Cyan
+RESET = "\033[0m"
 
-# Banner keren
+# Banner
 def banner():
     os.system("clear")
     print(f"""{B}
@@ -21,6 +20,7 @@ def banner():
 ╚════════════════════════════════════════════╝{RESET}
 """)
 
+# Menu
 def show_menu():
     print(f"""{C}
 [1]  Port Scanner
@@ -33,89 +33,40 @@ def show_menu():
 [8]  Exit Tool
 {RESET}""")
 
-def ping():
-    os.system("ping -c 4 " + input("Masukkan URL/IP: "))
+# Fungsi dummy (sementara)
+def dummy_action(name):
+    print(f"{C}\n[+] Menjalankan {name}...\n{RESET}")
+    time.sleep(1)
 
-def ip_lookup():
-    try:
-        host = input("Masukkan domain: ")
-        ip = socket.gethostbyname(host)
-        print(f"{G}IP Address: {ip}{RESET}")
-    except:
-        print("Gagal mendapatkan IP.")
-
-def dns_lookup():
-    try:
-        domain = input("Domain: ")
-        print(socket.gethostbyname_ex(domain))
-    except:
-        print("DNS lookup gagal.")
-
-def port_scanner():
-    target = input("IP Target: ")
-    ports = [21, 22, 23, 53, 80, 443, 8080]
-    for port in ports:
-        s = socket.socket(); s.settimeout(1)
-        if s.connect_ex((target, port)) == 0:
-            print(f"{R}Port {port} terbuka{RESET}")
-        s.close()
-
-def speed_test():
-    st = speedtest.Speedtest()
-    print("Download:", round(st.download()/1e6, 2), "Mbps")
-    print("Upload:", round(st.upload()/1e6, 2), "Mbps")
-
-def user_agent():
-    agents = [
-        "Mozilla/5.0 (Linux; Android 10)",
-        "Mozilla/5.0 (Windows NT 10.0)",
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3)",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
-    ]
-    print("User-Agent:", choice(agents))
-
-def quote():
-    try:
-        data = requests.get("https://api.quotable.io/random").json()
-        print(f'"{data["content"]}" - {data["author"]}')
-    except:
-        print("Gagal mengambil quote.")
-
-def info_sistem():
-    print("Sistem :", platform.system())
-    print("Versi  :", platform.version())
-    print("Platform:", platform.platform())
-    print("CPU    :", platform.machine())
-
-def info_hp():
-    print("📱 Info HP Kamu:")
-    print("- OS          :", platform.system())
-    print("- Kernel      :", platform.release())
-    print("- Arsitektur  :", platform.machine())
-    print("- Hostname    :", socket.gethostname())
-    try:
-        ip = socket.gethostbyname(socket.gethostname())
-        print("- IP Lokal    :", ip)
-    except:
-        print("- IP Lokal    : Tidak Terdeteksi")
-    if os.path.exists("/data/data/com.termux"):
-        print("- Kamu pakai Termux ✅")
-
-while True:
+# Main program
+def main():
     banner()
-    pilihan = menu()
-    if pilihan == "1": ping()
-    elif pilihan == "2": ip_lookup()
-    elif pilihan == "3": dns_lookup()
-    elif pilihan == "4": port_scanner()
-    elif pilihan == "5": speed_test()
-    elif pilihan == "6": user_agent()
-    elif pilihan == "7": quote()
-    elif pilihan == "8": info_sistem()
-    elif pilihan == "9": info_hp()
-    elif pilihan == "0":
-        print(f"{R}Keluar...{RESET}")
-        break
-    else:
-        print(f"{R}Menu tidak valid!{RESET}")
-    input(f"\n{B}Tekan Enter untuk kembali ke menu...{RESET}")
+    while True:
+        show_menu()
+        try:
+            pilihan = input(f"{B}Pilih menu > {RESET}")
+            if pilihan == '1':
+                dummy_action("Port Scanner")
+            elif pilihan == '2':
+                dummy_action("DNS Lookup")
+            elif pilihan == '3':
+                dummy_action("IP Geolocation")
+            elif pilihan == '4':
+                dummy_action("HTTP Header Check")
+            elif pilihan == '5':
+                dummy_action("Reverse IP Lookup")
+            elif pilihan == '6':
+                dummy_action("Ping Website")
+            elif pilihan == '7':
+                dummy_action("Device Info")
+            elif pilihan == '8':
+                print(f"{R}\n[!] Keluar...{RESET}")
+                break
+            else:
+                print(f"{R}[!] Pilihan tidak valid!{RESET}")
+        except KeyboardInterrupt:
+            print(f"\n{R}[!] Dihentikan oleh user.{RESET}")
+            break
+
+if __name__ == "__main__":
+    main()
