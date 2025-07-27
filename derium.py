@@ -1,7 +1,6 @@
 import os
 import platform
 import urllib.request
-import json
 from datetime import datetime
 
 R = '\033[91m'  # Merah
@@ -11,7 +10,7 @@ RESET = '\033[0m'
 def banner():
     print(f"""{B}
 ╔═════════════════════════════╗
-║     {R}DERIUM TOOLS TERMINAL{B}   ║
+║     {R}DERIUM TOOLS TERMINAL{B}  ║
 ╚═════════════════════════════╝{RESET}
 """)
 
@@ -19,7 +18,6 @@ def cek_security():
     print(f"{B}[•] Mengecek Keamanan Dasar...{RESET}")
     try:
         os.system("whoami")
-        print(f"{B}[✓] User Aktif Terdeteksi.{RESET}")
         os.system("ls /data/data/com.termux/")
         print(f"{B}[✓] Akses Termux Valid.{RESET}")
     except:
@@ -36,15 +34,12 @@ def penyimpanan():
     os.system("df -h")
 
 def info_perangkat():
-    try:
-        model = os.popen("getprop ro.product.model").read().strip()
-        version = os.popen("getprop ro.build.version.release").read().strip()
-        arch = platform.machine()
-        print(f"{B}Model   :{RESET} {model}")
-        print(f"{B}Android :{RESET} {version}")
-        print(f"{B}CPU Arch:{RESET} {arch}")
-    except:
-        print(f"{R}Gagal membaca info perangkat{RESET}")
+    model = os.popen("getprop ro.product.model").read().strip()
+    version = os.popen("getprop ro.build.version.release").read().strip()
+    arch = platform.machine()
+    print(f"{B}Model   :{RESET} {model}")
+    print(f"{B}Android :{RESET} {version}")
+    print(f"{B}CPU Arch:{RESET} {arch}")
 
 def ip_publik():
     os.system("curl ifconfig.me")
@@ -85,12 +80,12 @@ def qr_generator():
     os.system(f"qrencode -t ANSIUTF8 '{teks}'")
 
 def bersihkan_cache_termux():
-    print(f"{B}[•] Membersihkan cache Termux & Python...{RESET}")
+    print(f"{B}[•] Membersihkan cache Termux...{RESET}")
     os.system("rm -rf ~/.cache")
     os.system("rm -rf $PREFIX/tmp/*")
     os.system("rm -rf /data/data/com.termux/cache/*")
     print(f"{R}[✓] Cache Termux dibersihkan!{RESET}")
-    
+
 def menu():
     while True:
         os.system("clear")
@@ -110,7 +105,7 @@ def menu():
 [12] Monitor CPU
 [13] Uptime
 [14] QR Code Generator
-[15] Clear Cache Termux
+[15] Bersihkan Cache Termux
 [0]  Keluar{RESET}
 """)
         pilihan = input(f"{R}Pilih menu: {RESET}")
@@ -128,7 +123,7 @@ def menu():
             "11": info_kernel,
             "12": monitor_cpu,
             "13": uptime,
-            "14": qr_generator
+            "14": qr_generator,
             "15": bersihkan_cache_termux
         }
         if pilihan == "0":
