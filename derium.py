@@ -92,24 +92,33 @@ def speed_test():
     os.system("curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -")
 
 def encrypt_file():
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+import base64
+
+def encrypt_file():
     filepath = input("Masukkan path file: ")
-    key = Fernet.generate_key()
-    cipher = Fernet(key)
+    key = get_random_bytes(16)  # 128-bit AES
+    cipher = AES.new(key, AES.MODE_EAX)
 
     try:
         with open(filepath, 'rb') as f:
             data = f.read()
-        encrypted = cipher.encrypt(data)
 
-        out_path = os.path.join(DOWNLOAD_DIR, "encrypted_file.enc")
+        ciphertext, tag = cipher.encrypt_and_digest(data)
+
+        out_path = os.path.join(DOWNLOAD_DIR, "encrypted_file.bin")
         with open(out_path, 'wb') as f:
-            f.write(encrypted)
+            f.write(cipher.nonce)
+            f.write(tag)
+            f.write(ciphertext)
 
-        with open(os.path.join(DOWNLOAD_DIR, "enc_key.key"), 'wb') as f:
+        key_path = os.path.join(DOWNLOAD_DIR, "aes_key.key")
+        with open(key_path, 'wb') as f:
             f.write(key)
 
         print("File terenkripsi disimpan:", out_path)
-        print("Key disimpan:", os.path.join(DOWNLOAD_DIR, "enc_key.key"))
+        print("Key disimpan:", key_path)
     except Exception as e:
         print("Gagal:", e)
 
@@ -118,17 +127,20 @@ def decrypt_file():
     key_path = input("Masukkan path key: ")
 
     try:
+        with open(filepath, 'rb') as f:
+            nonce = f.read(16)
+            tag = f.read(16)
+            ciphertext = f.read()
+
         with open(key_path, 'rb') as f:
             key = f.read()
-        cipher = Fernet(key)
 
-        with open(filepath, 'rb') as f:
-            encrypted_data = f.read()
-        decrypted = cipher.decrypt(encrypted_data)
+        cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
+        data = cipher.decrypt_and_verify(ciphertext, tag)
 
         out_path = os.path.join(DOWNLOAD_DIR, "decrypted_file.txt")
         with open(out_path, 'wb') as f:
-            f.write(decrypted)
+            f.write(data)
 
         print("File berhasil didekripsi:", out_path)
     except Exception as e:
