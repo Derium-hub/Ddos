@@ -9,7 +9,21 @@ B = '\033[94m'  # Biru
 RESET = '\033[0m'
 
 def banner():
-    print(f"{B}=======[ {R}DERIUM TOOLS TERMINAL {B}]=======\n{RESET}")
+    print(f"""{B}
+╔═════════════════════════════╗
+║     {R}DERIUM TOOLS TERMINAL{B}     ║
+╚═════════════════════════════╝{RESET}
+""")
+
+def cek_security():
+    print(f"{B}[•] Mengecek Keamanan Dasar...{RESET}")
+    try:
+        os.system("whoami")
+        print(f"{B}[✓] User Aktif Terdeteksi.{RESET}")
+        os.system("ls /data/data/com.termux/")
+        print(f"{B}[✓] Akses Termux Valid.{RESET}")
+    except:
+        print(f"{R}[!] Akses terbatas atau tidak aman.{RESET}")
 
 def cek_internet():
     try:
@@ -17,16 +31,6 @@ def cek_internet():
         print(f"{B}[✓] Internet Aktif{RESET}")
     except:
         print(f"{R}[!] Tidak Ada Koneksi Internet{RESET}")
-
-def status_baterai():
-    try:
-        output = os.popen("termux-battery-status").read()
-        data = json.loads(output)
-        print(f"{B}Status     :{RESET} {data['status']}")
-        print(f"{B}Persentase :{RESET} {data['percentage']}%")
-        print(f"{B}Suhu       :{RESET} {data['temperature']}°C")
-    except:
-        print(f"{R}Gagal membaca status baterai{RESET}")
 
 def penyimpanan():
     os.system("df -h")
@@ -70,29 +74,11 @@ def scan_jaringan():
 def info_kernel():
     os.system("uname -a")
 
-def clipboard():
-    result = os.popen("termux-clipboard-get").read().strip()
-    if result:
-        print(f"{B}Isi Clipboard:{RESET} {result}")
-    else:
-        print(f"{R}Clipboard kosong atau tidak tersedia.{RESET}")
-
 def monitor_cpu():
     os.system("top -n 1")
 
 def uptime():
     os.system("uptime")
-
-def lokasi():
-    try:
-        output = os.popen("termux-location").read()
-        data = json.loads(output)
-        print(f"{B}Latitude :{RESET} {data['latitude']}")
-        print(f"{B}Longitude:{RESET} {data['longitude']}")
-        print(f"{B}Altitude :{RESET} {data['altitude']}")
-        print(f"{B}Speed    :{RESET} {data['speed']} m/s")
-    except:
-        print(f"{R}Gagal mengambil lokasi. Aktifkan izin lokasi.{RESET}")
 
 def qr_generator():
     teks = input(f"{B}Masukkan teks untuk QR: {RESET}")
@@ -100,10 +86,11 @@ def qr_generator():
 
 def menu():
     while True:
+        os.system("clear")
         banner()
         print(f"""{B}
-[1]  Cek Internet
-[2]  Status Baterai
+[1]  Cek Keamanan (Security Check)
+[2]  Cek Internet
 [3]  Cek Penyimpanan
 [4]  Info Perangkat
 [5]  Cek IP Publik
@@ -113,17 +100,15 @@ def menu():
 [9]  Speedtest
 [10] Scan Jaringan
 [11] Info Kernel
-[12] Clipboard
-[13] Monitor CPU
-[14] Uptime
-[15] Lokasi Sekarang
-[16] QR Code Generator
-[0]  Keluar
-{RESET}""")
+[12] Monitor CPU
+[13] Uptime
+[14] QR Code Generator
+[0]  Keluar{RESET}
+""")
         pilihan = input(f"{R}Pilih menu: {RESET}")
         fungsi = {
-            "1": cek_internet,
-            "2": status_baterai,
+            "1": cek_security,
+            "2": cek_internet,
             "3": penyimpanan,
             "4": info_perangkat,
             "5": ip_publik,
@@ -133,11 +118,9 @@ def menu():
             "9": speedtest,
             "10": scan_jaringan,
             "11": info_kernel,
-            "12": clipboard,
-            "13": monitor_cpu,
-            "14": uptime,
-            "15": lokasi,
-            "16": qr_generator
+            "12": monitor_cpu,
+            "13": uptime,
+            "14": qr_generator
         }
         if pilihan == "0":
             print(f"{B}Terima kasih telah menggunakan Derium Tools!{RESET}")
@@ -149,7 +132,6 @@ def menu():
         else:
             print(f"{R}Pilihan tidak valid!{RESET}")
         input(f"\n{B}Tekan Enter untuk kembali ke menu...{RESET}")
-        os.system("clear")
 
 if __name__ == "__main__":
     os.system("clear")
