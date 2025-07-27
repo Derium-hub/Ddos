@@ -151,7 +151,6 @@ def jaringan_info():
 def download_video():
     url = input("URL YouTube: ")
     os.system(f"yt-dlp -f best -o '{DOWNLOAD_DIR}/%(title)s.%(ext)s' {url}")
-    print(f"Video berhasil diunduh ke: {DOWNLOAD_DIR}")
 
 # === MAIN LOOP ===
 
