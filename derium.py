@@ -150,4 +150,59 @@ def jaringan_info():
 
 def download_video():
     url = input("URL YouTube: ")
-    os.system(f"yt-dlp -f best -o '{DOWNLOAD_DIR}/%(title)s.%(ext)s' {
+    os.system(f"yt-dlp -f best -o '{DOWNLOAD_DIR}/%(title)s.%(ext)s' {url}")
+    print(f"Video berhasil diunduh ke: {DOWNLOAD_DIR}")
+
+# === MAIN LOOP ===
+
+while True:
+    os.system("clear")
+    banner()
+    menu()
+    try:
+        pilihan = input("\nPilih nomor menu: ")
+        if pilihan == "1":
+            security_check()
+        elif pilihan == "2":
+            device_info()
+        elif pilihan == "3":
+            check_connection()
+        elif pilihan == "4":
+            ping_website()
+        elif pilihan == "5":
+            dns_lookup()
+        elif pilihan == "6":
+            scan_ports()
+        elif pilihan == "7":
+            android_cpu_info()
+        elif pilihan == "8":
+            kalkulator()
+        elif pilihan == "9":
+            public_ip()
+        elif pilihan == "10":
+            local_ip()
+        elif pilihan == "11":
+            speed_test()
+        elif pilihan == "12":
+            encrypt_file()
+        elif pilihan == "13":
+            decrypt_file()
+        elif pilihan == "14":
+            check_host()
+        elif pilihan == "15":
+            cari_file()
+        elif pilihan == "16":
+            check_update()
+        elif pilihan == "17":
+            jaringan_info()
+        elif pilihan == "19":
+            download_video()
+        elif pilihan == "20":
+            print("Keluar...")
+            break
+        else:
+            print("Pilihan tidak valid.")
+    except KeyboardInterrupt:
+        print("\nDibatalkan oleh pengguna.")
+    
+    input("\nTekan Enter untuk kembali ke menu...")
