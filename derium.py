@@ -11,7 +11,7 @@ RESET = '\033[0m'
 def banner():
     print(f"""{B}
 ╔═════════════════════════════╗
-║     {R}DERIUM TOOLS TERMINAL{B}     ║
+║     {R}DERIUM TOOLS TERMINAL{B}   ║
 ╚═════════════════════════════╝{RESET}
 """)
 
@@ -84,6 +84,13 @@ def qr_generator():
     teks = input(f"{B}Masukkan teks untuk QR: {RESET}")
     os.system(f"qrencode -t ANSIUTF8 '{teks}'")
 
+def bersihkan_cache_termux():
+    print(f"{B}[•] Membersihkan cache Termux & Python...{RESET}")
+    os.system("rm -rf ~/.cache")
+    os.system("rm -rf $PREFIX/tmp/*")
+    os.system("rm -rf /data/data/com.termux/cache/*")
+    print(f"{R}[✓] Cache Termux dibersihkan!{RESET}")
+    
 def menu():
     while True:
         os.system("clear")
@@ -103,6 +110,7 @@ def menu():
 [12] Monitor CPU
 [13] Uptime
 [14] QR Code Generator
+[15] Clear Cache Termux
 [0]  Keluar{RESET}
 """)
         pilihan = input(f"{R}Pilih menu: {RESET}")
@@ -121,6 +129,7 @@ def menu():
             "12": monitor_cpu,
             "13": uptime,
             "14": qr_generator
+            "15": bersihkan_cache_termux
         }
         if pilihan == "0":
             print(f"{B}Terima kasih telah menggunakan Derium Tools!{RESET}")
